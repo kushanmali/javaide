@@ -1,0 +1,40 @@
+[18:02:14] edge 153.0.4234.32
+[18:02:56] edge cold start 39790 ms
+[18:03:20] edge cold start 23593 ms
+[18:03:40] edge cold start 19475 ms
+[18:03:42] edge CDN round trip median 239.2 ms
+[18:04:04] edge cached start 21929 ms
+[18:04:28] edge cached start 23783 ms
+[18:04:45] edge cached start 16684 ms
+[18:05:07] edge cold start without preloading 21677 ms
+[18:05:37] edge cold start without preloading 29661 ms
+[18:06:03] edge cold start without preloading 26147 ms
+[18:06:08] edge hello median end-to-end 313.1 ms
+[18:06:15] edge classes median end-to-end 463 ms
+[18:06:18] edge runtime-error median end-to-end 278.4 ms
+[18:06:21] edge compile-error median end-to-end 208.9 ms
+[18:06:37] edge 10k lines median 5448 ms
+[18:06:44] edge stop latency median 11 ms
+[18:07:16] edge cpu loop guard on median 1491 ms
+[18:07:43] edge cpu loop guard off median 1307 ms
+[18:07:43] chromium 153.0.8010.12
+[18:08:04] chromium cold start 19371 ms
+[18:08:32] chromium cold start 27682 ms
+[18:08:53] chromium cold start 21152 ms
+[18:08:56] chromium CDN round trip median 253.6 ms
+[18:09:17] chromium cached start 21195 ms
+[18:09:40] chromium cached start 23047 ms
+[18:10:00] chromium cached start 20399 ms
+[18:10:22] chromium cold start without preloading 20891 ms
+[18:10:45] chromium cold start without preloading 23815 ms
+[18:11:12] chromium cold start without preloading 26676 ms
+[18:11:17] chromium hello median end-to-end 312.5 ms
+[18:11:24] chromium classes median end-to-end 477.1 ms
+[18:11:27] chromium runtime-error median end-to-end 277.5 ms
+[18:11:30] chromium compile-error median end-to-end 215.5 ms
+[18:11:45] chromium 10k lines median 4816 ms
+[18:11:52] chromium stop latency median 10.3 ms
+[18:12:31] chromium cpu loop guard on median 1382 ms
+[18:13:04] chromium cpu loop guard off median 1199 ms
+[18:13:04] Wrote reports/benchmark-results.json
+exit=0

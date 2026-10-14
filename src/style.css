@@ -1,0 +1,618 @@
+:root {
+  --bg: #16181d;
+  --surface: #1e2027;
+  --surface-2: #252830;
+  --border: #30333d;
+  --text: #e3e5ea;
+  --text-muted: #9097a3;
+  --accent: #e76f00;
+  --accent-strong: #ff8a1f;
+  --run: #2ea043;
+  --run-hover: #3fb950;
+  --stop: #d9463e;
+  --focus: #5b9dff;
+  --stdout: #d7dae0;
+  --stderr: #ff7b72;
+  --stdin: #7ee787;
+  --sys: #8b949e;
+  --success: #3fb950;
+  --warning: #d29922;
+  --error: #f85149;
+  --exception-bg: rgba(248, 81, 73, 0.08);
+  --line-flash: rgba(231, 111, 0, 0.28);
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f3f4f6;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --border: #dde0e5;
+  --text: #1f2328;
+  --text-muted: #636c76;
+  --accent: #c25e00;
+  --accent-strong: #e76f00;
+  --run: #1f883d;
+  --run-hover: #1a7f37;
+  --stop: #cf222e;
+  --focus: #0969da;
+  --stdout: #1f2328;
+  --stderr: #cf222e;
+  --stdin: #1a7f37;
+  --sys: #6e7781;
+  --success: #1a7f37;
+  --warning: #9a6700;
+  --error: #cf222e;
+  --exception-bg: rgba(207, 34, 46, 0.06);
+  --line-flash: rgba(231, 111, 0, 0.2);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.4 var(--font-ui);
+  overflow: hidden;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  height: 100dvh;
+}
+
+/* ---------- toolbar ---------- */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #fff;
+  font: 700 12px var(--font-mono);
+}
+
+.brand-name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.file-name {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font: 12px var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  flex: none;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-run {
+  background: var(--run);
+  color: #fff;
+}
+
+.btn-run:not(:disabled):hover {
+  background: var(--run-hover);
+}
+
+.btn-stop {
+  border-color: var(--border);
+  color: var(--stop);
+}
+
+.btn-stop:not(:disabled):hover {
+  background: color-mix(in srgb, var(--stop) 12%, transparent);
+}
+
+.btn-ghost {
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-2);
+}
+
+.btn-ghost svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#theme-button svg path {
+  fill: currentColor;
+  stroke: none;
+}
+
+.btn-icon {
+  width: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+.btn-small {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.select-wrap select {
+  height: 32px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface) url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4' fill='none' stroke='%239097a3' stroke-width='1.6' stroke-linecap='round'/></svg>") no-repeat right 8px center / 14px;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* ---------- workspace ---------- */
+
+.workspace {
+  --bottom-height: 38%;
+  display: grid;
+  grid-template-rows: 1fr 6px minmax(120px, var(--bottom-height));
+  min-height: 0;
+  /* Without this the editor's minimum width stretches the whole layout on narrow screens */
+  min-width: 0;
+}
+
+.editor-pane {
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.editor {
+  position: absolute;
+  inset: 0;
+}
+
+.splitter {
+  background: var(--border);
+  cursor: row-resize;
+  position: relative;
+  border-top: 2px solid var(--bg);
+  border-bottom: 3px solid var(--bg);
+}
+
+.splitter:hover,
+.splitter.is-dragging {
+  background: var(--accent);
+}
+
+.bottom-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  background: var(--surface);
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tab.is-active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.tabs-spacer {
+  flex: 1;
+}
+
+.badge {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--error);
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  letter-spacing: 0;
+}
+
+.badge.is-warning {
+  background: var(--warning);
+}
+
+.panel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* ---------- console ---------- */
+
+.console-scroller {
+  padding: 10px 16px 16px;
+  cursor: text;
+}
+
+.console {
+  font: 13px/1.6 var(--font-mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.out-stdout {
+  color: var(--stdout);
+}
+
+.out-stderr {
+  color: var(--stderr);
+}
+
+.out-stdin {
+  color: var(--stdin);
+}
+
+.sys {
+  color: var(--sys);
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+.sys-success {
+  color: var(--success);
+}
+
+.sys-error {
+  color: var(--error);
+  font-style: normal;
+}
+
+.input-line {
+  display: inline-flex;
+  min-width: 40%;
+}
+
+.console-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 1px dashed var(--stdin);
+  outline: none;
+  background: transparent;
+  color: var(--stdin);
+  font: inherit;
+  caret-color: var(--stdin);
+}
+
+.exception {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--error);
+  border-radius: 0 6px 6px 0;
+  background: var(--exception-bg);
+  white-space: normal;
+}
+
+.exception-title {
+  color: var(--error);
+}
+
+.exception-hint {
+  margin: 2px 0 4px;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.frames {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.frame-library {
+  color: var(--text-muted);
+}
+
+.frame-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--error);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.frame-link:hover {
+  color: var(--accent-strong);
+}
+
+/* ---------- problems ---------- */
+
+.problems .empty {
+  margin: 16px;
+  color: var(--text-muted);
+}
+
+.problem-list {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.problem {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  align-items: start;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 16px;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.problem:hover {
+  background: var(--surface-2);
+}
+
+.problem-icon {
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--error);
+}
+
+.problem.is-warning .problem-icon {
+  background: var(--warning);
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.8);
+}
+
+.problem-message {
+  font: 13px/1.5 var(--font-mono);
+  white-space: pre-wrap;
+}
+
+.problem-location {
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ---------- status bar ---------- */
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* The status message truncates so the CheerpJ credit on the right always stays visible */
+#status-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-right {
+  display: inline-flex;
+  flex: none;
+  gap: 16px;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--warning);
+}
+
+.status[data-state='ready'] .dot {
+  background: var(--success);
+}
+
+.status[data-state='busy'] .dot {
+  background: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.status[data-state='error'] .dot {
+  background: var(--error);
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.line-flash {
+  background: var(--line-flash);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status[data-state='busy'] .dot {
+    animation: none;
+  }
+}
+
+/* Drop optional status details before they can push the CheerpJ credit off screen */
+@media (max-width: 1000px) {
+  #timing {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .toolbar {
+    flex-wrap: wrap;
+  }
+
+  .brand-name,
+  .label-optional,
+  .divider,
+  #cursor,
+  #timing {
+    display: none;
+  }
+
+  .statusbar {
+    gap: 8px;
+    padding: 4px 10px;
+  }
+
+  .actions {
+    gap: 6px;
+  }
+}
+
+.out-block {
+  /* chunks of program output; each is laid out independently */
+  display: block;
+}
+
+.credit {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.credit:hover {
+  color: var(--accent-strong);
+}

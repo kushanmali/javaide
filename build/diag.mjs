@@ -1,0 +1,20 @@
+import { chromium } from '@playwright/test';
+import { preview } from 'vite';
+const headless = process.argv[2] !== 'headed';
+const server = await preview({ preview: { port: 4173 }, logLevel: 'warn' });
+const browser = await chromium.launch({ headless });
+const page = await (await browser.newContext()).newPage();
+const t0 = Date.now();
+const slow = [];
+page.on('requestfinished', (r) => { const t = r.timing(); const d = t.responseEnd; if (d > 1500) slow.push(`${Math.round(d)}ms ${r.url().slice(0, 90)}`); });
+await page.exposeFunction('mark', (m) => console.log(`${Date.now() - t0}ms ${m}`));
+await page.addInitScript(() => {
+  new MutationObserver(() => window.mark?.(document.getElementById('status-text')?.textContent)).observe(document, { subtree: true, characterData: true, childList: true, attributeFilter: ['data-state'] });
+});
+await page.goto('http://localhost:4173/');
+await page.waitForFunction(() => !document.getElementById('run-button').disabled, null, { timeout: 300000 });
+console.log('ready', Date.now() - t0, 'ms; headless =', headless);
+console.log('slow requests:\n' + slow.join('\n'));
+const r = await page.evaluate(() => fetch('/lib/tools.jar', { headers: { Range: 'bytes=0-99' } }).then((x) => `${x.status} ${x.headers.get('content-range')} accept-ranges=${x.headers.get('accept-ranges')}`));
+console.log('range check:', r);
+await browser.close(); server.httpServer.close();

@@ -1,0 +1,29 @@
+{
+  "name": "java-ide",
+  "version": "0.1.0",
+  "description": "Browser-based Java IDE with client-side compilation and execution (Monaco + CheerpJ/WebAssembly)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:bridge": "node scripts/build-bridge.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:all": "vitest run && playwright test",
+    "benchmark": "vite build && node scripts/benchmark.mjs",
+    "report": "node scripts/report.cjs",
+    "profile:preload": "vite build && node scripts/profile-runtime-resources.mjs"
+  },
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "monaco-editor": "^0.56.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "docx": "^9.7.1",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
+  },
+  "private": true
+}

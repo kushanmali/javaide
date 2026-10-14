@@ -1,0 +1,5 @@
+elapsed=52 sum=59999997
+elapsed=53 sum=59999997
+elapsed=57 sum=59999997
+elapsed=51 sum=59999997
+elapsed=66 sum=59999997

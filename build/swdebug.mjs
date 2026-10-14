@@ -1,0 +1,31 @@
+import { chromium } from '@playwright/test';
+import { preview } from 'vite';
+const server = await preview({ preview: { port: 4181 }, logLevel: 'warn' });
+const browser = await chromium.launch({ channel: 'msedge' });
+const ctx = await browser.newContext();
+const page = await ctx.newPage();
+ctx.on('serviceworker', (w) => console.log('service worker:', w.url()));
+page.on('console', (m) => { if (/cache|sw|quota|error/i.test(m.text())) console.log('[page]', m.type(), m.text().slice(0, 200)); });
+await page.goto('http://localhost:4181/');
+await page.waitForFunction(() => window.__javaIde?.startup, null, { timeout: 300000 });
+await page.waitForTimeout(1500);
+// second visit: does it hit the cache?
+let cdnBytes = 0;
+page.on('requestfinished', async (r) => { if (r.url().includes('leaningtech')) { const s = await r.sizes().catch(() => ({ responseBodySize: 0 })); cdnBytes += s.responseBodySize; } });
+const t2 = Date.now();
+await page.reload();
+await page.waitForFunction(() => window.__javaIde?.startup, null, { timeout: 300000 });
+console.log('visit2 wall', Date.now() - t2, 'page-observed CDN KB', Math.round(cdnBytes / 1024));
+await page.waitForTimeout(2000);
+const info = await page.evaluate(async () => {
+  const names = await caches.keys();
+  const out = {};
+  for (const n of names) out[n] = (await (await caches.open(n)).keys()).length;
+  const keys = names.length ? (await (await caches.open(names[0])).keys()).map((r) => r.url) : [];
+  const sample = keys.slice(0, 4);
+  const blocks = keys.filter((u) => u.includes('__block=')).length;
+  const est = await navigator.storage?.estimate?.();
+  return { blocks, keyCount: keys.length, controller: !!navigator.serviceWorker.controller, scope: navigator.serviceWorker.controller?.scriptURL, names, out, sample, usageMB: est ? Math.round(est.usage / 1e6) : null };
+});
+console.log(JSON.stringify(info, null, 1));
+await browser.close(); server.httpServer.close();
